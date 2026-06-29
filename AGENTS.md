@@ -90,6 +90,6 @@ If you change the public shape of the project, update the matching docs in the s
 ## Cursor Cloud specific instructions
 
 - There is nothing to install: the project has zero runtime and dev dependencies, no `node_modules`, and no build step. Node 18+ (the VM has Node 22) is all that is needed for the checks.
-- Validate changes with `npm run check` (syntax + static/brand/link/license guards + 44 engine tests + smoke) and `npm run typecheck`. `npm run typecheck` pulls TypeScript on demand via `npx` and therefore needs network access.
+- Validate changes with `npm run check` (syntax + static/brand/link/license guards + engine tests + smoke) and `npm run typecheck`. `npm run typecheck` pulls TypeScript on demand via `npx` and therefore needs network access.
 - Serve the app with `python3 -m http.server 8000 --bind 127.0.0.1`, then open `http://127.0.0.1:8000/`. Do NOT use `npm run serve`: that script calls bare `python`, which does not exist on the VM (only `python3`).
 - Gameplay is a real-time, twitch-timed flyer. Automated GUI testers cannot reliably score by flapping because per-action input latency lets the bird flap-and-fall before the next click lands — this is a tooling limitation, not a bug. The flap/score/collision logic is covered by the headless engine tests (e.g. `flap sets the upward impulse`, `passing six pipes scores six points`, `FirstFlight unlocks at score 1`); rely on those for scoring verification, and use the browser only to confirm the app loads, renders, and responds.
