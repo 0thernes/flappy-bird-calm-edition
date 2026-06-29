@@ -101,9 +101,11 @@ This is a zero-dependency, no-build, browser-first project. There is nothing to 
   `npx -y -p typescript@5`, so it needs network the first time.
 - **Driving gameplay from automation/headless:** `game.js` loads as a classic `<script defer>`, so its
   top-level globals are reachable from the page scope — `state`, `bird`, `pipes`, `CONFIG`,
-  `doFlap()`, and `startGame()`. The engine only flaps on a `pointerdown` on the `#game` canvas or a
-  `keydown`; a Space keypress is intentionally ignored while focus is on a button (e.g. right after
-  clicking the tutorial's dismiss button), so prefer real pointer clicks on the canvas or call
-  `doFlap()` directly. Gap center for the next pipe is `pipe.topHeight + state.gap / 2`.
+  `doFlap()`, and `startGame()`. Flap input routes through `handleAction()` and triggers on
+  `pointerdown` on the `#game` canvas, on `pointerdown` on the surrounding stage panel in `play`
+  (outside `.mobile-controls`, `.toolbar`, `.stage-topbar`, and `.tutorial-overlay`), on the mobile
+  **Flap** button, and on `keydown` for `Space`/`ArrowUp` (unless focus is on a form control/button).
+  For automation, prefer real pointer clicks on the canvas or call `doFlap()` directly. Gap center
+  for a pipe is `pipe.topHeight + state.gap / 2`.
 - **Layout gotcha:** the play canvas sits below the page header; in a short viewport scroll the canvas
   into view before interacting with it.
