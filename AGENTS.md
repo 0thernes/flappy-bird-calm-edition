@@ -86,3 +86,24 @@ If you change the public shape of the project, update the matching docs in the s
 - Preserve the current runtime shape.
 - Check the architecture guide before refactoring.
 - Run `npm run check` before closing the task.
+
+## Cursor Cloud specific instructions
+
+This is a zero-dependency, no-build, browser-first project. There is nothing to `npm install`
+(no `dependencies`/`devDependencies`, no lockfile — do not add one). The standard commands in
+`package.json` and `README.md` work as documented; notes below are only the non-obvious caveats.
+
+- **Run the game:** serve the folder and open it, e.g. `python3 -m http.server 8000 --bind 127.0.0.1`,
+  then visit `http://127.0.0.1:8000/index.html`. Note: the `npm run serve` script calls `python`,
+  but this VM only has `python3` — invoke `python3` directly (or `python3 -m http.server 8000`).
+- **Checks/tests:** `npm run check` (syntax + static + brand/link/license guards + 44 engine tests +
+  smoke) runs offline with no install. `npm run typecheck` fetches TypeScript on demand via
+  `npx -y -p typescript@5`, so it needs network the first time.
+- **Driving gameplay from automation/headless:** `game.js` loads as a classic `<script defer>`, so its
+  top-level globals are reachable from the page scope — `state`, `bird`, `pipes`, `CONFIG`,
+  `doFlap()`, and `startGame()`. The engine only flaps on a `pointerdown` on the `#game` canvas or a
+  `keydown`; a Space keypress is intentionally ignored while focus is on a button (e.g. right after
+  clicking the tutorial's dismiss button), so prefer real pointer clicks on the canvas or call
+  `doFlap()` directly. Gap center for the next pipe is `pipe.topHeight + state.gap / 2`.
+- **Layout gotcha:** the play canvas sits below the page header; in a short viewport scroll the canvas
+  into view before interacting with it.
